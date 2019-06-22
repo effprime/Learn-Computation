@@ -12,6 +12,22 @@ def abs(x):
     else:
         return -1*x
 
+def floor(a,b):
+    # assume number goes in 0 times
+    counter = 0
+    # count up each time multiples of b are under a
+    while True:
+        if b*(counter+1) > a:
+            break
+        counter += 1
+    # return counter
+    return counter
+
+def mod(a,b):
+    # mod is the difference
+    # between a and b*floor(a/b)
+    return a - b*floor(a,b)
+
 def exp(x):
     # adjust accuracy of calculation
     n = 1E6
@@ -93,8 +109,10 @@ def log(base, x):
     return ln(x)/ln(base)
 
 def sin(x):
+    # calculate equivalent angle
+    x = mod(x,2*3.14159)
     # adjust accuracy of calculation
-    k = 10
+    k = 100
     # define term function for sin(x)
     tf = lambda n,x : (-1)**n / factorial(2*n+1) * x**(2*n+1)
     # return taylor summation
