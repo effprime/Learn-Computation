@@ -1,8 +1,8 @@
 def fprime(func):
     # adjust accuracy of calculation
-    xh = 1e-6
+    h = 1e-6
     # return different quotient function
-    return lambda x: (func(x + hx) - func(x)) / hx
+    return lambda x: (func(x + h) - func(x)) / h
 
 
 def fprimeprime(func):
@@ -12,11 +12,11 @@ def fprimeprime(func):
     return fprime(dfdx)
 
 
-def x_range(xa, xb, dx):
+def x_range(a, b, dx):
     # calculate size of range
-    size = int((xb - xa) / dx) + 1
+    size = int((b - a) / dx) + 1
     # return list of elements incremented by dx
-    return [xa + dx * i for i in range(0, size)]
+    return [a + dx * i for i in range(0, size)]
 
 
 def summer(values):
@@ -34,13 +34,13 @@ def average(values):
     return summer(values) / len(values)
 
 
-def integral(func, xa, xb):
+def integral(func, a, b):
     # set interval width
     dx = 1e-6
     # calculate sum of function from a to b-dx
-    summation = summer([func(x) for x in x_range(xa, xb - dx, dx)])
+    summation = summer([func(x) for x in x_range(a, b - dx, dx)])
     # return trapezoidal rule formula
-    return dx * (summation + average([func(xa), func(xb)]))
+    return dx * (summation + average([func(a), func(b)]))
 
 
 def anti_derivative(func, const=0):
@@ -58,31 +58,31 @@ def abs(number):
         return -1 * number
 
 
-def floor(xa, xb):
+def floor(a, b):
     # assume number goes in 0 times
     counter = 0
     # count up each time multiples of b are under a
     while True:
-        if xb * (counter + 1) > xa:
+        if b * (counter + 1) > a:
             break
         counter += 1
     # return counter
     return counter
 
 
-def mod(xa, xb):
+def mod(a, b):
     # mod is the difference
     # between a and b*floor(a/b)
-    return xa - xb * floor(xa, xb)
+    return a - b * floor(a, b)
 
 
-def exp(number):
+def exp(x):
     # adjust accuracy of calculation
     delta = 1e6
     # calculate e by definition
     euler = (1 + (1 / delta)) ** delta
     # return exponentiation
-    return euler ** number
+    return euler ** x
 
 
 def newton(number, delta, criteria):
@@ -106,11 +106,11 @@ def inverse(func):
     # produce derivative function
     dfdx = fprime(func)
     # define the inverse function
-    def fi(xa):
+    def fi(x):
         # calculate delta function for newton method
-        delta = lambda x: (func(x) - xa) / dfdx(x)
+        delta = lambda x: (func(x) - x) / dfdx(x)
         # create initial answer by halving input
-        number = xa / 2
+        number = x / 2
         # use newton method to converge
         return newton(number, delta, criteria)
 
@@ -141,64 +141,67 @@ def taylor(termfunction, max, number):
     return result
 
 
-def sqrt(xa):
+def sqrt(x):
     # def square function
     func = lambda x: x ** 2
     # produce inverse of this function
     # by definition: the square root
     fi = inverse(func)
     # return inverse function
-    return fi(xa)
+    return fi(x)
 
 
-def ln(xa):
+def ln(x):
     # produce inverse of the exp
     # by definition: the natural log
     fi = inverse(exp)
     # return inverse function
-    return fi(xa)
+    return fi(x)
 
 
-def log(base, xa):
+def log(base, x):
     # any log base is reduced to ln
     # using 'change of base formula'
-    return ln(xa) / ln(base)
+    return ln(x) / ln(base)
 
 
-def sin(xa):
+def sin(x):
     # calculate equivalent angle
-    xa = mod(xa, 2 * 3.14159)
+    x = mod(x, 2 * 3.14159)
     # adjust accuracy of calculation
     max = 100
     # define term function for sin(x)
     tf = lambda n, x: (-1) ** n / factorial(2 * n + 1) * x ** (2 * n + 1)
     # return taylor summation
-    return taylor(tf, max, xa)
+    return taylor(tf, max, x)
 
 
-def cos(xa):
+def cos(x):
     # cosx = d/dx(sinx)
     # produce derivative of sin(x)
     dfdx = fprime(sin)
     # return function
-    return dfdx(xa)
+    return dfdx(x)
 
 
-def tan(xa):
+def tan(x):
     # by definition of tan(x)
-    return sin(xa) / cos(xa)
+    return sin(x) / cos(x)
 
 
-def csc(xa):
+def csc(x):
     # by definition of csc(x)
-    return 1 / sin(xa)
+    return 1 / sin(x)
 
 
-def sec(xa):
+def sec(x):
     # by definition of sec(x)
-    return 1 / cos(xa)
+    return 1 / cos(x)
 
 
-def cot(xa):
+def cot(x):
     # by definition of cot(x)
-    return 1 / tan(xa)
+    return 1 / tan(x)
+
+if __name__ == "__main__":
+    print(cot(1.5))
